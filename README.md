@@ -31,25 +31,25 @@ ner.add_label(ent[2])
 #get names of other pipes to disable them during training
 other_pipes = [pipe for pipe in nlp.pipe_names if pipe != 'ner']
 with nlp.disable_pipes(*other_pipes): 
- # since we are using the exixting model so need to deseble all other pipeline component during training
- optimizer = nlp.begin_training()# optimizing the training data for update in the ner
- for itn in range(n_iter): # taking each iteration on the training data
- random.shuffle(train_data)
- losses = {}
- # batch up the examples using spaCy's minibatch
- batches = minibatch(train_data, size=compounding(4., 32., 1.001))
- for batch in batches:
- texts, annotations = zip(*batch)
- nlp.update( texts, annotations, drop=0.5, sgd=optimizer,losses=losses)
- # texets=batch of texts
- #  annotations=batch of annotations
- # (drop=0.5) =dropout - make it harder to memorise data
- # (sgd=optimizer)=callable to update weight
+# since we are using the exixting model so need to deseble all other pipeline component during training
+optimizer = nlp.begin_training()# optimizing the training data for update in the ner
+for itn in range(n_iter): # taking each iteration on the training data
+random.shuffle(train_data)
+losses = {}
+# batch up the examples using spaCy's minibatch
+batches = minibatch(train_data, size=compounding(4., 32., 1.001))
+for batch in batches:
+texts, annotations = zip(*batch)
+nlp.update( texts, annotations, drop=0.5, sgd=optimizer,losses=losses)
+# texets=batch of texts
+#  annotations=batch of annotations
+# (drop=0.5) =dropout - make it harder to memorise data
+# (sgd=optimizer)=callable to update weight
 
- # test the trained model
-  for text, _ in train_data:
-  doc = nlp(text)
-  print('Entities', [(ent.text, ent.label_) for ent in doc.ents])
+# test the trained model
+for text, _ in train_data:
+doc = nlp(text)
+print('Entities', [(ent.text, ent.label_) for ent in doc.ents])
         
 if __name__ == '__main__':
     plac.call(main)
