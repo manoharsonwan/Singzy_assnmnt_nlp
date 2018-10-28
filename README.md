@@ -21,10 +21,10 @@ print("to Create blank 'en' model")
 if 'ner' not in nlp.pipe_names: # since we need only the person name and it is is prasent in the 'ner'
 ner = nlp.create_pipe('ner')
 nlp.add_pipe(ner, last=True)
-otherwise, get it so we can add labels
+#otherwise, get it so we can add labels
 else:
 ner = nlp.get_pipe('ner')
-# adding the lable so it can identify the entities through this mention belove loop
+#adding the lable so it can identify the entities through this mention belove loop
 for _, annotations in train_data:
 for ent in annotations.get('entities'):
 ner.add_label(ent[2])
